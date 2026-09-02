@@ -1,1 +1,1 @@
-# core-agentic-AI
+# Core-Agentic-AI
