@@ -1,0 +1,27 @@
+[project]
+name = "core-rag-pinecone"
+version = "0.1.0"
+description = "RAG pipeline with Pinecone vector database"
+requires-python = ">=3.11"
+
+dependencies = [
+    # Pinecone Vector Database (latest - renamed from pinecone-client)
+    "pinecone>=4.0.0",
+    
+    # Data Processing
+    "pandas>=2.2.0",
+    
+    # Embeddings & LLM
+    "sentence-transformers>=3.0.0",
+    "ollama>=0.0.8",
+    
+    # LangChain
+    "langchain>=0.1.0",
+    "langchain-community>=0.0.10",
+    
+    # Utilities
+    "pydantic>=2.0.0",
+    "pydantic-settings>=2.0.0",
+    "requests>=2.31.0",
+    "python-dotenv>=1.0.0",
+]
