@@ -1,0 +1,10 @@
+[project]
+name = "core-ai"
+version = "0.1.0"
+description = "Core AI workspace"
+requires-python = ">=3.14,<3.15"
+dependencies = [
+    "numpy",
+    "torch",
+    "transformers>=4.0.0",
+]
