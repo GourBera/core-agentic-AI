@@ -1,0 +1,16 @@
+# Ignore dot folders (hidden directories)
+.*/
+
+# Common IDE and build directories
+.vscode/
+.idea/
+.env
+.DS_Store
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
