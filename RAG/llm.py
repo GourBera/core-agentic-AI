@@ -1,0 +1,164 @@
+"""LLM integration for text generation."""
+
+import logging
+from typing import Optional
+from abc import ABC, abstractmethod
+
+logger = logging.getLogger(__name__)
+
+
+class LLM(ABC):
+    """Base class for LLM providers."""
+
+    @abstractmethod
+    def generate(self, prompt: str) -> str:
+        """Generate response from prompt."""
+        pass
+
+
+class OpenAILLM(LLM):
+    """OpenAI LLM integration."""
+
+    def __init__(
+        self,
+        model: str = "gpt-3.5-turbo",
+        temperature: float = 0.7,
+        max_tokens: int = 2048,
+        api_key: Optional[str] = None,
+    ):
+        """Initialize OpenAI LLM."""
+        try:
+            from openai import OpenAI
+
+            self.model = model
+            self.temperature = temperature
+            self.max_tokens = max_tokens
+            self.client = OpenAI(api_key=api_key)
+            logger.info(f"Initialized OpenAI LLM: {model}")
+        except ImportError:
+            logger.error("openai not installed. Install with: pip install openai")
+            raise
+        except Exception as e:
+            logger.error(f"Error initializing OpenAI LLM: {e}")
+            raise
+
+    def generate(self, prompt: str) -> str:
+        """Generate response using OpenAI API."""
+        try:
+            response = self.client.chat.completions.create(
+                model=self.model,
+                messages=[
+                    {
+                        "role": "user",
+                        "content": prompt,
+                    }
+                ],
+                temperature=self.temperature,
+                max_tokens=self.max_tokens,
+            )
+            return response.choices[0].message.content
+        except Exception as e:
+            logger.error(f"Error generating response from OpenAI: {e}")
+            raise
+
+
+class AnthropicLLM(LLM):
+    """Anthropic Claude LLM integration."""
+
+    def __init__(
+        self,
+        model: str = "claude-3-sonnet-20240229",
+        temperature: float = 0.7,
+        max_tokens: int = 2048,
+        api_key: Optional[str] = None,
+    ):
+        """Initialize Anthropic LLM."""
+        try:
+            import anthropic
+
+            self.model = model
+            self.temperature = temperature
+            self.max_tokens = max_tokens
+            self.client = anthropic.Anthropic(api_key=api_key)
+            logger.info(f"Initialized Anthropic LLM: {model}")
+        except ImportError:
+            logger.error("anthropic not installed. Install with: pip install anthropic")
+            raise
+        except Exception as e:
+            logger.error(f"Error initializing Anthropic LLM: {e}")
+            raise
+
+    def generate(self, prompt: str) -> str:
+        """Generate response using Anthropic API."""
+        try:
+            message = self.client.messages.create(
+                model=self.model,
+                max_tokens=self.max_tokens,
+                messages=[
+                    {
+                        "role": "user",
+                        "content": prompt,
+                    }
+                ],
+                temperature=self.temperature,
+            )
+            return message.content[0].text
+        except Exception as e:
+            logger.error(f"Error generating response from Anthropic: {e}")
+            raise
+
+
+class HuggingFaceLLM(LLM):
+    """HuggingFace LLM integration."""
+
+    def __init__(
+        self,
+        model: str = "gpt2",
+        device: str = "cpu",
+        max_tokens: int = 200,
+    ):
+        """Initialize HuggingFace LLM."""
+        try:
+            from transformers import pipeline
+
+            self.model = model
+            self.max_tokens = max_tokens
+            self.pipeline = pipeline(
+                "text-generation",
+                model=model,
+                device=0 if device == "cuda" else -1,
+            )
+            logger.info(f"Initialized HuggingFace LLM: {model}")
+        except ImportError:
+            logger.error("transformers not installed. Install with: pip install transformers torch")
+            raise
+        except Exception as e:
+            logger.error(f"Error initializing HuggingFace LLM: {e}")
+            raise
+
+    def generate(self, prompt: str) -> str:
+        """Generate response using HuggingFace model."""
+        try:
+            result = self.pipeline(
+                prompt,
+                max_length=self.max_tokens,
+                do_sample=True,
+                top_p=0.9,
+                num_return_sequences=1,
+            )
+            return result[0]["generated_text"]
+        except Exception as e:
+            logger.error(f"Error generating response from HuggingFace: {e}")
+            raise
+
+
+class MockLLM(LLM):
+    """Mock LLM for testing."""
+
+    def __init__(self):
+        """Initialize mock LLM."""
+        logger.info("Initialized Mock LLM for testing")
+
+    def generate(self, prompt: str) -> str:
+        """Return mock response."""
+        return "This is a mock response. In production, this would be generated by an LLM."

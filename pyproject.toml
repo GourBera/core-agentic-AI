@@ -1,10 +1,98 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 [project]
-name = "core-ai"
+name = "core-agentic-ai"
 version = "0.1.0"
-description = "Core AI workspace"
-requires-python = ">=3.14,<3.15"
-dependencies = [
-    "numpy",
-    "torch",
-    "transformers>=4.0.0",
+description = "Production-grade Core AI with Transformers and RAG pipeline"
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+authors = [
+    {name = "GourBera", email = "your-email@example.com"}
 ]
+
+dependencies = [
+    # Core ML & Transformers
+    "numpy>=1.24.0",
+    "torch>=2.0.0",
+    "transformers>=4.30.0",
+    
+    # RAG Pipeline
+    "pinecone-client>=3.0.0",
+    "sentence-transformers>=3.0.0",
+    "langchain>=0.1.0",
+    "langchain-community>=0.0.10",
+    "pydantic>=2.0.0",
+    "pydantic-settings>=2.0.0",
+    
+    # Document Processing
+    "pypdf>=3.17.0",
+    "python-docx>=0.8.11",
+    "python-pptx>=0.6.23",
+    "markdown>=3.5.0",
+    "unstructured>=0.11.0",
+    
+    # Semantic Chunking
+    "semantic-text-splitter>=0.13.0",
+    
+    # LLM Integration (Ollama)
+    "ollama>=0.0.8",
+    "requests>=2.31.0",
+    
+    # Data Processing
+    "pandas>=2.0.0",
+    
+    # Logging & Monitoring
+    "python-json-logger>=2.0.7",
+    "structlog>=23.2.0",
+    
+    # Testing & Quality
+    "pytest>=7.4.0",
+    "pytest-asyncio>=0.21.0",
+    "pytest-cov>=4.1.0",
+    "black>=23.0.0",
+    "ruff>=0.1.0",
+    "mypy>=1.5.0",
+    
+    # Utilities
+    "python-dotenv>=1.0.0",
+    "click>=8.1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ipython>=8.15.0",
+    "jupyter>=1.0.0",
+    "jupyter-lab>=4.0.0",
+]
+
+[tool.black]
+line-length = 100
+target-version = ["py311"]
+exclude = '''
+/(
+    \.git
+  | \.venv
+  | __pycache__
+  | \.eggs
+)/
+'''
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+select = ["E", "F", "W", "I", "N", "UP", "ANN", "RUF"]
+ignore = ["ANN101", "ANN102"]
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false
+
+[tool.pytest.ini_options]
+testpaths = ["RAG/tests", "Transformers/tests"]
+pythonpath = ["RAG", "Transformers"]
+asyncio_mode = "auto"
