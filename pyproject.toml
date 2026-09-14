@@ -6,7 +6,6 @@ build-backend = "hatchling.build"
 name = "core-agentic-ai"
 version = "0.1.0"
 description = "Production-grade Core AI with Transformers and RAG pipeline"
-readme = "README.md"
 requires-python = ">=3.11"
 license = {text = "MIT"}
 authors = [
@@ -64,35 +63,12 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
     "ipython>=8.15.0",
-    "jupyter>=1.0.0",
-    "jupyter-lab>=4.0.0",
+
 ]
 
-[tool.black]
-line-length = 100
-target-version = ["py311"]
-exclude = '''
-/(
-    \.git
-  | \.venv
-  | __pycache__
-  | \.eggs
-)/
-'''
-
-[tool.ruff]
-line-length = 100
-target-version = "py311"
-select = ["E", "F", "W", "I", "N", "UP", "ANN", "RUF"]
-ignore = ["ANN101", "ANN102"]
+[tool.hatch.build.targets.wheel]
+packages = ["RAG"]
 
 [tool.mypy]
 python_version = "3.11"
-warn_return_any = true
-warn_unused_configs = true
-disallow_untyped_defs = false
 
-[tool.pytest.ini_options]
-testpaths = ["RAG/tests", "Transformers/tests"]
-pythonpath = ["RAG", "Transformers"]
-asyncio_mode = "auto"
